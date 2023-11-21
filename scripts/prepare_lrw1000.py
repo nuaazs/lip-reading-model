@@ -8,7 +8,7 @@ import torch
 from collections import defaultdict
 import sys
 from torch.utils.data import DataLoader
-from turbojpeg import TurboJPEG, TJPF_GRAY, TJSAMP_GRAY, TJFLAG_PROGRESSIVE
+from turbojpeg import TurboJPEG #, TJPF_GRAY, TJSAMP_GRAY, TJFLAG_PROGRESSIVE
 
 
 jpeg = TurboJPEG()
@@ -42,7 +42,7 @@ class LRW1000_Dataset(Dataset):
         for item in data:
             audio_file = self.va_dict.get(item)
             assert(audio_file != None)        
-            audio_file = 'LRW1000_Public/audio/' + audio_file + '.npy'
+            audio_file = 'LRW1000_Public/audio/' + audio_file + '.wav'
             if(os.path.exists(audio_file)):
                 item = (item[0], audio_file, item[1], item[2], item[3])                                
                 self.class_dict[item[-1]].append(item)                
@@ -82,7 +82,7 @@ class LRW1000_Dataset(Dataset):
                 
         result['video'] = inputs
         result['label'] = int(label)        
-        result['duration'] = border.astype(np.bool)
+        result['duration'] = border.astype(np.bool_)
         
         savename = os.path.join(target_dir, f'{path}_{op}_{ed}.pkl')
         torch.save(result, savename)
@@ -136,7 +136,7 @@ if(__name__ == '__main__'):
         
         loader = DataLoader(LRW1000_Dataset(index_file, target_dir),
                 batch_size = 96, 
-                num_workers = 16,   
+                num_workers = 64,   
                 shuffle = False,         
                 drop_last = False)
         
