@@ -21,7 +21,7 @@ class LRW1000_Dataset(Dataset):
         if(self.phase == 'train'):
             self.index_root = 'LRW1000_Public_pkl_jpeg/trn'
         else:
-            self.index_root = 'LRW1000_Public_pkl_jpeg/tst'                        
+            self.index_root = 'LRW1000_Public_pkl_jpeg/longyuan'                        
         
         self.data = glob.glob(os.path.join(self.index_root, '*.pkl'))
         

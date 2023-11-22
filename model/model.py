@@ -12,15 +12,13 @@ class VideoModel(nn.Module):
         
         self.args = args
         
-        self.video_cnn = VideoCNN(se=self.args.se)        
-        if(self.args.border):
+        self.video_cnn = VideoCNN(se=True)        
+        if(True):
             in_dim = 512 + 1
         else:
             in_dim = 512
         self.gru = nn.GRU(in_dim, 1024, 3, batch_first=True, bidirectional=True, dropout=0.2)        
-            
-
-        self.v_cls = nn.Linear(1024*2, self.args.n_class)     
+        self.v_cls = nn.Linear(1024*2, 1000)     
         self.dropout = nn.Dropout(p=dropout)        
 
     def forward(self, v, border=None):
@@ -35,11 +33,11 @@ class VideoModel(nn.Module):
             f_v = self.video_cnn(v)  
             f_v = self.dropout(f_v)        
         
-        if(self.args.border):
-            border = border[:,:,None]
-            h, _ = self.gru(torch.cat([f_v, border], -1))
-        else:            
-            h, _ = self.gru(f_v)
+        # if(self.args.border):
+        border = border[:,:,None]
+        h, _ = self.gru(torch.cat([f_v, border], -1))
+        # else:            
+        #     h, _ = self.gru(f_v)
         
                                                                                                         
         y_v = self.v_cls(self.dropout(h)).mean(1)
